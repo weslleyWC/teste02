@@ -23,3 +23,7 @@ Hospedagens gratuitas podem suspender serviços inativos, limitar CPU, espaço o
 ## Conteúdo suportado
 
 O app aceita links HTTPS do Pinterest, Instagram, YouTube e Facebook. O conteúdo precisa ser público, conter vídeo e estar acessível sem login. Respeite os direitos autorais e os termos de cada plataforma.
+
+## Compartilhar links com o PinDown
+
+Depois de publicar em HTTPS e instalar a PWA em um navegador compatível, use o menu **Compartilhar** do Pinterest e escolha PinDown. O link será preenchido e a busca começará automaticamente. A disponibilidade do PinDown como destino depende do navegador, do sistema operacional e da instalação da PWA; se não aparecer no menu, cole o link no app como antes.
