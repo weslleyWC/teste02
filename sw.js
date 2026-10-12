@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pindown-shell-v2';
+const CACHE_NAME = 'pindown-shell-v3';
 const APP_SHELL = ['/', '/manifest.webmanifest', '/static/icon.svg'];
 
 self.addEventListener('install', event => {

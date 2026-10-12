@@ -4,9 +4,8 @@ from collections import defaultdict, deque
 from contextlib import asynccontextmanager
 from threading import BoundedSemaphore, Lock
 from time import monotonic
-from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi import Depends, FastAPI, HTTPException, Request, Response
 from fastapi.responses import FileResponse
-from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from yt_dlp import YoutubeDL
@@ -16,6 +15,7 @@ import logging
 import os
 import shutil
 import tempfile
+import time
 import uuid
 
 ROOT = Path(__file__).resolve().parent
@@ -23,14 +23,18 @@ STATIC = ROOT / 'static'
 MAX_FILE_SIZE = 150 * 1024 * 1024
 MAX_DOWNLOAD_SECONDS = 180
 PASSWORD = os.environ.get('PINDOWN_PASSWORD', '')
+SESSION_COOKIE = 'pindown_session'
+SESSION_MAX_AGE = 30 * 24 * 60 * 60
 logger = logging.getLogger('pindown')
-basic_auth = HTTPBasic(auto_error=False)
 download_slots = BoundedSemaphore(2)
 rate_lock = Lock()
 rate_windows = defaultdict(deque)
 
 class Link(BaseModel):
     url: str = Field(min_length=1, max_length=2048)
+
+class PasswordEntry(BaseModel):
+    password: str = Field(min_length=1, max_length=256)
 
 PLATFORMS = {
     'pinterest.com': ('Pinterest', True),
@@ -112,19 +116,35 @@ def check_rate_limit(request: Request, endpoint: str, limit: int) -> None:
             raise HTTPException(429, 'Muitas solicitações. Aguarde um minuto e tente novamente.')
         timestamps.append(now)
 
-def require_password(credentials: HTTPBasicCredentials | None = Depends(basic_auth)) -> None:
+def create_session_token() -> str:
+    expires_at = str(int(time.time()) + SESSION_MAX_AGE)
+    signature = hmac.new(
+        PASSWORD.encode('utf-8'),
+        f'pindown-session:{expires_at}'.encode('ascii'),
+        'sha256',
+    ).hexdigest()
+    return f'{expires_at}.{signature}'
+
+def has_valid_session(request: Request) -> bool:
     if not PASSWORD:
-        return
-    if (
-        credentials is None
-        or not hmac.compare_digest(credentials.username.encode('utf-8'), b'friends')
-        or not hmac.compare_digest(credentials.password.encode('utf-8'), PASSWORD.encode('utf-8'))
-    ):
-        raise HTTPException(
-            401,
-            'Acesso protegido. Informe a senha compartilhada.',
-            headers={'WWW-Authenticate': 'Basic realm="PinDown"'},
-        )
+        return True
+    token = request.cookies.get(SESSION_COOKIE, '')
+    try:
+        expires_at, signature = token.split('.', 1)
+        if int(expires_at) <= int(time.time()):
+            return False
+    except (TypeError, ValueError):
+        return False
+    expected = hmac.new(
+        PASSWORD.encode('utf-8'),
+        f'pindown-session:{expires_at}'.encode('ascii'),
+        'sha256',
+    ).hexdigest()
+    return hmac.compare_digest(signature, expected)
+
+def require_password(request: Request) -> None:
+    if not has_valid_session(request):
+        raise HTTPException(401, 'Sua sessão expirou. Entre novamente.')
 
 @app.get('/')
 def index():
@@ -133,6 +153,44 @@ def index():
 @app.get('/health')
 def health():
     return {'status': 'ok'}
+
+@app.get('/api/auth/status')
+def auth_status(request: Request):
+    return {'authenticated': has_valid_session(request)}
+
+@app.post('/api/auth/login')
+def login(
+    entry: PasswordEntry,
+    request: Request,
+    response: Response,
+):
+    check_rate_limit(request, 'login', 5)
+    if not PASSWORD or not hmac.compare_digest(
+        entry.password.encode('utf-8'),
+        PASSWORD.encode('utf-8'),
+    ):
+        raise HTTPException(401, 'Senha incorreta.')
+    response.set_cookie(
+        SESSION_COOKIE,
+        create_session_token(),
+        max_age=SESSION_MAX_AGE,
+        httponly=True,
+        secure=os.environ.get('APP_ENV', 'production').lower() not in {'development', 'test'},
+        samesite='strict',
+        path='/',
+    )
+    return {'authenticated': True}
+
+@app.post('/api/auth/logout')
+def logout(response: Response):
+    response.delete_cookie(
+        SESSION_COOKIE,
+        httponly=True,
+        secure=os.environ.get('APP_ENV', 'production').lower() not in {'development', 'test'},
+        samesite='strict',
+        path='/',
+    )
+    return {'authenticated': not PASSWORD}
 
 @app.middleware('http')
 async def add_security_headers(request: Request, call_next):

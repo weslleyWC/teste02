@@ -2,7 +2,7 @@
 
 ## Senha de acesso
 
-Antes de publicar o app na internet, configure `PINDOWN_PASSWORD` com uma senha compartilhada de pelo menos 12 caracteres e `APP_ENV=production` nas variáveis secretas do serviço. Sem `APP_ENV=development` nem uma senha forte configurada, o app não inicia; assim, uma configuração incompleta falha de forma segura. O navegador pedirá usuário `friends` e a senha compartilhada ao abrir o site.
+Antes de publicar o app na internet, configure `PINDOWN_PASSWORD` com uma senha compartilhada de pelo menos 12 caracteres e `APP_ENV=production` nas variáveis secretas do serviço. Sem `APP_ENV=development` nem uma senha forte configurada, o app não inicia; assim, uma configuração incompleta falha de forma segura. Cada pessoa digita a senha uma vez e recebe um cookie de sessão assinado, `HttpOnly`, `Secure` em produção e `SameSite=Strict`, válido por 30 dias. A sessão é revogada ao sair, trocar a senha ou limpar os cookies do site.
 
 As proteções de abuso limitam prévias e downloads por endereço IP e permitem no máximo dois downloads simultâneos por processo. Esses limites são locais ao processo: hospedagem com várias instâncias pode exigir limites no proxy ou serviço de borda também.
 
