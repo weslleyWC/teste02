@@ -1,29 +1,173 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0b0c12"><meta name="referrer" content="no-referrer">
-<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/static/icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/static/icon.svg">
-<title>PinDown — Baixe vídeos</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#11100f">
+<meta name="referrer" content="no-referrer">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/static/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/static/icon.svg">
+<title>PinDown — Baixe vídeos do Pinterest</title>
 <style>
-:root{font-family:Inter,system-ui,Arial,sans-serif;color:#f7f7fb;background:#0b0c12}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 0%,#2c1730 0%,#0b0c12 60%);display:flex;align-items:center;justify-content:center;padding:24px}.wrap{width:min(100%,620px)}.logo{display:flex;align-items:center;justify-content:center;gap:12px;font-size:28px;font-weight:850;letter-spacing:-1px}.logo span{background:#e72d56;border-radius:14px;padding:10px 15px}h1{text-align:center;font-size:clamp(30px,6vw,46px);letter-spacing:-2px;line-height:1.1;margin:36px 0 14px}h1 em{color:#ff4b73;font-style:normal}p{text-align:center;color:#a7a6b5;line-height:1.6}.panel{margin:30px auto 0;background:#171821;border:1px solid #34303e;padding:26px;border-radius:22px;box-shadow:0 20px 65px #0005}.hidden{display:none!important}.login-panel{max-width:420px}label{display:block;font-size:14px;font-weight:700;margin-bottom:12px}.field{width:100%;padding:17px;background:#0e1017;color:white;border:1px solid #3b3b48;border-radius:12px;font-size:15px;outline:none}.field:focus{border-color:#f04b74}button{border:0;border-radius:12px;padding:16px 22px;background:#ee315d;color:white;font-weight:750;cursor:pointer;width:100%;margin-top:14px;font-size:16px}button:hover{background:#ff4b77}button:disabled{opacity:.6;cursor:wait}.status{min-height:25px;font-size:14px;color:#c9c4d0;margin-top:16px;text-align:center}.preview{display:none;margin-top:20px;gap:16px;align-items:center;background:#20212c;padding:14px;border-radius:14px}.preview img{width:110px;height:110px;object-fit:cover;border-radius:10px}.preview strong{display:block;overflow-wrap:anywhere}.preview small{color:#a8a5b5}footer{font-size:12px;color:#777584;text-align:center;margin-top:30px}.install{display:none;background:#292a37;border:1px solid #514657}.logout{background:transparent;border:1px solid #514657;padding:10px 14px;font-size:13px}.credit{color:#ff8aa3;font-weight:700}@media(max-width:480px){body{padding:18px 14px;align-items:flex-start}.wrap{margin:auto 0}.panel{padding:20px 16px;border-radius:18px}.preview img{width:82px;height:82px}.logo{font-size:25px}h1{margin-top:28px}.field{font-size:16px}}
+:root{color-scheme:dark;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#faf7f4;background:#11100f;font-synthesis:none;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+body{min-height:100vh;margin:0;background:radial-gradient(ellipse at 50% -24%,#592426 0,transparent 55%),#11100f}
+button,input{font:inherit}
+button{color:inherit}
+.shell{width:min(100% - 40px,960px);margin:0 auto;padding:28px 0 24px}
+.topbar{display:flex;align-items:center;justify-content:space-between}
+.brand{display:inline-flex;align-items:center;gap:11px;color:#fff;text-decoration:none;font-size:20px;font-weight:800;letter-spacing:-.6px}
+.brand-mark{display:grid;width:38px;height:38px;place-items:center;border-radius:50%;background:#e60023;color:white;font-family:Georgia,serif;font-size:26px;font-weight:800;font-style:italic;line-height:1}
+.top-note{color:#aaa29d;font-size:13px}
+.hero{max-width:700px;margin:84px auto 0;text-align:center}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid #ffffff20;border-radius:999px;background:#ffffff08;color:#f1c6bd;font-size:11px;font-weight:800;letter-spacing:1.35px}
+.eyebrow-dot{width:7px;height:7px;border-radius:50%;background:#e60023;box-shadow:0 0 15px #e6002388}
+h1{margin:23px 0 16px;font-size:clamp(42px,8vw,74px);font-weight:790;letter-spacing:-4px;line-height:.99}
+h1 span{color:#ff5367}
+.hero-copy{max-width:500px;margin:0 auto;color:#b9b0ab;font-size:16px;line-height:1.7}
+.card{width:min(100%,690px);margin:42px auto 0;padding:28px;border:1px solid #ffffff16;border-radius:24px;background:linear-gradient(145deg,#201e1d,#191817);box-shadow:0 26px 90px #0007}
+.hidden{display:none!important}
+.login-panel{max-width:460px;margin-top:70px}
+.login-heading{margin:0 0 8px;font-size:23px;letter-spacing:-.6px}
+.login-copy{margin:0 0 22px;color:#b9b0ab;font-size:14px;line-height:1.6}
+label{display:block;margin-bottom:10px;color:#f3eeeb;font-size:13px;font-weight:700}
+.field{width:100%;min-height:56px;padding:0 17px;border:1px solid #ffffff25;border-radius:13px;outline:none;background:#11100f;color:#fff;font-size:15px;transition:border-color .18s,box-shadow .18s}
+.field::placeholder{color:#817974}
+.field:focus{border-color:#ff5367;box-shadow:0 0 0 3px #e6002326}
+.link-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px}
+.button{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:52px;padding:0 20px;border:0;border-radius:13px;background:#e60023;color:#fff;font-size:15px;font-weight:750;cursor:pointer;transition:transform .16s,background .16s,box-shadow .16s}
+.button:hover{transform:translateY(-1px);background:#f20d32;box-shadow:0 9px 24px #e6002333}
+.button:disabled{transform:none;opacity:.58;cursor:wait;box-shadow:none}
+.button-primary{width:100%;margin-top:13px}
+.button-subtle{min-width:100px;border:1px solid #ffffff20;background:#ffffff08;color:#eee7e2}
+.button-subtle:hover{background:#ffffff12;box-shadow:none}
+.login-button{margin-top:16px}
+.status{min-height:22px;margin-top:15px;color:#d3c8c3;font-size:13px;line-height:1.5;text-align:center}
+.status[data-kind="error"]{color:#ff8490}
+.status[data-kind="success"]{color:#96dbb1}
+.preview{display:none;grid-template-columns:112px minmax(0,1fr);gap:18px;align-items:center;margin-top:22px;padding:14px;border:1px solid #ffffff12;border-radius:17px;background:#11100f}
+.preview img{display:block;width:112px;height:126px;border-radius:11px;background:#25211f;object-fit:cover}
+.preview-content{min-width:0}
+.preview-kicker{display:block;margin-bottom:7px;color:#ff8b96;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase}
+.preview strong{display:-webkit-box;overflow:hidden;color:#fbf7f3;font-size:15px;line-height:1.45;overflow-wrap:anywhere;-webkit-box-orient:vertical;-webkit-line-clamp:3}
+.preview small{display:block;margin-top:8px;color:#aaa29d;font-size:12px}
+.download-button{margin-top:14px}
+.install{display:none;margin-top:12px}
+.logout{display:block;width:auto;min-height:36px;margin:0 0 24px auto;padding:0 13px;border:1px solid #ffffff20;border-radius:10px;background:#ffffff08;color:#d8cfca;font-size:12px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;width:min(100%,690px);margin:28px auto 0}
+.step{padding:17px 17px 18px;border:1px solid #ffffff10;border-radius:16px;background:#ffffff05}
+.step-number{display:grid;width:25px;height:25px;place-items:center;border-radius:8px;background:#e6002322;color:#ff8290;font-size:12px;font-weight:800}
+.step strong{display:block;margin-top:12px;font-size:13px}
+.step p{margin:6px 0 0;color:#aaa29d;font-size:12px;line-height:1.55}
+.privacy{display:flex;align-items:center;justify-content:center;gap:8px;margin:23px auto 0;color:#a79e99;font-size:12px;text-align:center}
+.privacy svg{flex:none;color:#e78a8e}
+footer{padding:34px 0 8px;color:#77706c;font-size:12px;text-align:center}
+.credit{display:block;margin-top:6px;color:#ff7d89;font-weight:750;letter-spacing:.2px}
+@media(max-width:600px){
+ .shell{width:min(100% - 28px,500px);padding-top:18px}
+ .brand{font-size:18px}.brand-mark{width:35px;height:35px}
+ .top-note{max-width:130px;font-size:11px;text-align:right}
+ .hero{margin-top:61px}
+ h1{margin-top:20px;font-size:clamp(43px,12vw,62px);letter-spacing:-2.8px}
+ .hero-copy{max-width:360px;font-size:14px}
+ .card{margin-top:30px;padding:20px 16px;border-radius:20px}
+ .login-panel{margin-top:58px}
+ .link-row{grid-template-columns:minmax(0,1fr) 48px}
+ .button-subtle{min-width:0;padding:0;font-size:0}
+ .button-subtle::after{content:"＋";font-size:23px}
+ .field{min-height:54px;padding:0 13px;font-size:14px}
+ .button{min-height:52px}
+ .preview{grid-template-columns:84px minmax(0,1fr);gap:13px;padding:11px}
+ .preview img{width:84px;height:102px}
+ .steps{grid-template-columns:1fr;gap:9px;margin-top:20px}
+ .step{display:grid;grid-template-columns:28px 1fr;column-gap:9px;padding:12px}
+ .step-number{grid-row:span 2}
+ .step strong{margin-top:0}
+ .step p{margin-top:3px}
+ .privacy{align-items:flex-start;font-size:11px;line-height:1.5}
+ footer{padding-top:27px}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
 </style>
 </head>
-<body><main class="wrap"><div class="logo"><span>↓</span> PinDown</div><h1>Seus vídeos favoritos,<br><em>em um clique.</em></h1><p>Baixe vídeos públicos do Pinterest, Instagram, YouTube e Facebook.</p><section class="panel login-panel hidden" id="login-panel"><form id="login-form"><label for="password">Senha compartilhada</label><input class="field" id="password" type="password" autocomplete="current-password" required maxlength="256" placeholder="Digite a senha do PinDown"><button id="login-button" type="submit">Entrar</button></form><div class="status" id="login-status" role="status" aria-live="polite"></div></section><section class="panel hidden" id="app-panel"><button class="logout" id="logout" type="button">Sair</button><label for="url">Link do vídeo</label><input class="field" id="url" type="url" inputmode="url" placeholder="Cole o link da publicação" autocomplete="url"><button id="analyze">Buscar vídeo →</button><button class="install" id="install">＋ Instalar PinDown</button><div class="status" id="status" role="status" aria-live="polite"></div><div class="preview" id="preview"><img id="thumb" alt="Miniatura do vídeo"><div style="flex:1;min-width:0"><strong id="title"></strong><small id="duration"></small><button id="download">↓ Baixar vídeo</button></div></div></section><footer>Uso pessoal • Baixe apenas conteúdos que você tem direito de utilizar.<br><span class="credit">by TK</span></footer></main>
+<body>
+<main class="shell">
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="PinDown início"><span class="brand-mark" aria-hidden="true">P</span><span>PinDown</span></a>
+    <span class="top-note">Seus Pins favoritos, sempre por perto</span>
+  </header>
+
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="eyebrow"><span class="eyebrow-dot"></span> FEITO PARA SEUS PINS</div>
+    <h1 id="hero-title">Salve seus Pins.<br><span>Guarde o que inspira.</span></h1>
+    <p class="hero-copy">Baixe vídeos públicos do Pinterest de um jeito simples e rápido. Cole o link do Pin ou compartilhe direto com o PinDown.</p>
+  </section>
+
+  <section class="card login-panel hidden" id="login-panel" aria-label="Entrar no PinDown">
+    <form id="login-form">
+      <h2 class="login-heading">Que bom ter você por aqui</h2>
+      <p class="login-copy">Digite a senha compartilhada para continuar. Você não vai precisar entrar de novo neste navegador por 30 dias.</p>
+      <label for="password">Senha do PinDown</label>
+      <input class="field" id="password" type="password" autocomplete="current-password" required maxlength="256" placeholder="Digite a senha compartilhada">
+      <button class="button button-primary login-button" id="login-button" type="submit">Entrar <span aria-hidden="true">→</span></button>
+    </form>
+    <div class="status" id="login-status" role="status" aria-live="polite"></div>
+  </section>
+
+  <section class="card hidden" id="app-panel" aria-label="Baixar vídeo do Pinterest">
+    <button class="logout" id="logout" type="button">Sair da conta</button>
+    <label for="url">Link do Pin</label>
+    <div class="link-row">
+      <input class="field" id="url" type="url" inputmode="url" placeholder="https://pin.it/..." autocomplete="url" aria-describedby="link-hint">
+      <button class="button button-subtle" id="paste" type="button" aria-label="Colar link da área de transferência" title="Colar link da área de transferência">Colar link</button>
+    </div>
+    <div id="link-hint" class="status" style="min-height:0;margin-top:8px;text-align:left">Aceitamos links de Pins públicos do Pinterest.</div>
+    <button class="button button-primary" id="analyze" type="button">Encontrar meu vídeo <span aria-hidden="true">→</span></button>
+    <button class="button button-subtle install" id="install" type="button">＋ Instalar PinDown</button>
+    <div class="status" id="status" role="status" aria-live="polite"></div>
+    <div class="preview" id="preview">
+      <img id="thumb" alt="Miniatura do vídeo do Pin">
+      <div class="preview-content">
+        <span class="preview-kicker">Seu vídeo está pronto</span>
+        <strong id="title"></strong>
+        <small id="duration"></small>
+        <button class="button button-primary download-button" id="download" type="button"><span aria-hidden="true">↓</span> Baixar vídeo</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="steps" aria-label="Como usar">
+    <article class="step"><span class="step-number">1</span><strong>Encontre um Pin</strong><p>Escolha um vídeo público no Pinterest.</p></article>
+    <article class="step"><span class="step-number">2</span><strong>Compartilhe ou cole</strong><p>Envie o link para o PinDown ou cole aqui.</p></article>
+    <article class="step"><span class="step-number">3</span><strong>Salve no dispositivo</strong><p>Confira a prévia e baixe seu vídeo.</p></article>
+  </section>
+
+  <p class="privacy">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 19 6v5c0 4.6-2.9 8.2-7 10-4.1-1.8-7-5.4-7-10V6l7-3Z" stroke="currentColor" stroke-width="1.7"/><path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Baixe apenas vídeos que você tem autorização para salvar.
+  </p>
+  <footer>Feito para guardar ideias que merecem ficar.<span class="credit">by TK</span></footer>
+</main>
 <script>
 const $=id=>document.getElementById(id), status=$('status'), preview=$('preview');
 function setAuthenticated(authenticated){$('login-panel').classList.toggle('hidden',authenticated);$('app-panel').classList.toggle('hidden',!authenticated)}
+function setStatus(element,message,kind=''){element.textContent=message;element.dataset.kind=kind}
 async function readError(response,fallback){try{return(await response.json()).detail||fallback}catch{return fallback}}
 async function apiRequest(path,payload){const response=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});if(!response.ok)throw Error(await readError(response,'Não foi possível processar este link.'));return response}
 async function processSharedLink(){const params=new URLSearchParams(location.search);let sharedUrl=params.get('url')||'';if(!sharedUrl){const sharedText=params.get('text')||'';sharedUrl=(sharedText.match(/https?:\/\/[^\s<>"']+/i)||[])[0]||'';sharedUrl=sharedUrl.replace(/[),.;!?]+$/,'')}if(sharedUrl){$('url').value=sharedUrl;history.replaceState(null,'',location.pathname);$('analyze').click()}}
-async function initialize(){try{const response=await fetch('/api/auth/status',{cache:'no-store'});const auth=await response.json();setAuthenticated(auth.authenticated);if(auth.authenticated)processSharedLink()}catch{setAuthenticated(false);$('login-status').textContent='Não foi possível conectar ao servidor.'}}
-$('login-form').addEventListener('submit',async event=>{event.preventDefault();$('login-button').disabled=true;$('login-status').textContent='Verificando senha...';try{await apiRequest('/api/auth/login',{password:$('password').value});$('password').value='';$('login-status').textContent='';setAuthenticated(true);processSharedLink()}catch(e){$('login-status').textContent=e.message}finally{$('login-button').disabled=false}});
-$('logout').onclick=async()=>{try{const response=await apiRequest('/api/auth/logout',{});const auth=await response.json();preview.style.display='none';setAuthenticated(auth.authenticated);if(!auth.authenticated)$('password').focus()}catch(e){status.textContent=e.message}};
-$('analyze').onclick=async()=>{preview.style.display='none';$('analyze').disabled=true;status.textContent='Buscando informações do vídeo...';try{const response=await apiRequest('/api/info',{url:$('url').value.trim()});const data=await response.json();$('title').textContent=data.title;$('thumb').style.display=data.thumbnail?'block':'none';if(data.thumbnail)$('thumb').src=data.thumbnail;$('duration').textContent=data.duration?`${Math.floor(data.duration/60)}:${String(Math.floor(data.duration%60)).padStart(2,'0')}`:'Vídeo disponível';preview.style.display='flex';status.textContent='Vídeo encontrado!'}catch(e){status.textContent=e.message;if(e.message.includes('sessão expirou'))setAuthenticated(false)}finally{$('analyze').disabled=false}};
-$('download').onclick=async()=>{$('download').disabled=true;status.textContent='Preparando o download...';try{const response=await apiRequest('/api/download',{url:$('url').value.trim()});const blob=await response.blob();const disposition=response.headers.get('content-disposition')||'';const match=disposition.match(/filename\*?=(?:UTF-8''|\")?([^;\"]+)/i);const name=match?decodeURIComponent(match[1]):'pindown-video.mp4';const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download=name;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(link.href),30000);status.textContent='Download iniciado!'}catch(e){status.textContent=e.message;if(e.message.includes('sessão expirou'))setAuthenticated(false)}finally{$('download').disabled=false}};
+async function initialize(){try{const response=await fetch('/api/auth/status',{cache:'no-store'});const auth=await response.json();setAuthenticated(auth.authenticated);if(auth.authenticated)processSharedLink()}catch{setAuthenticated(false);setStatus($('login-status'),'Não foi possível conectar ao servidor.','error')}}
+$('login-form').addEventListener('submit',async event=>{event.preventDefault();$('login-button').disabled=true;setStatus($('login-status'),'Verificando senha...');try{await apiRequest('/api/auth/login',{password:$('password').value});$('password').value='';setStatus($('login-status'),'');setAuthenticated(true);processSharedLink()}catch(error){setStatus($('login-status'),error.message,'error')}finally{$('login-button').disabled=false}});
+$('logout').onclick=async()=>{try{const response=await apiRequest('/api/auth/logout',{});const auth=await response.json();preview.style.display='none';setAuthenticated(auth.authenticated);if(!auth.authenticated)$('password').focus()}catch(error){setStatus(status,error.message,'error')}};
+$('paste').onclick=async()=>{try{$('url').value=await navigator.clipboard.readText();$('url').focus();setStatus(status,'Link colado. Toque em “Encontrar meu vídeo”.','success')}catch{ $('url').focus();setStatus(status,'Não foi possível acessar a área de transferência. Cole o link no campo.','error')}};
+$('analyze').onclick=async()=>{preview.style.display='none';$('analyze').disabled=true;setStatus(status,'Buscando seu Pin...');try{const response=await apiRequest('/api/info',{url:$('url').value.trim()});const data=await response.json();$('title').textContent=data.title;$('thumb').style.display=data.thumbnail?'block':'none';if(data.thumbnail)$('thumb').src=data.thumbnail;$('duration').textContent=data.duration?`${Math.floor(data.duration/60)}:${String(Math.floor(data.duration%60)).padStart(2,'0')}`:'Vídeo disponível';preview.style.display='grid';setStatus(status,'Encontramos seu vídeo!','success')}catch(error){setStatus(status,error.message,'error');if(error.message.includes('sessão expirou'))setAuthenticated(false)}finally{$('analyze').disabled=false}};
+$('download').onclick=async()=>{$('download').disabled=true;setStatus(status,'Preparando seu vídeo...');try{const response=await apiRequest('/api/download',{url:$('url').value.trim()});const blob=await response.blob();const disposition=response.headers.get('content-disposition')||'';const match=disposition.match(/filename\*?=(?:UTF-8''|\")?([^;\"]+)/i);const name=match?decodeURIComponent(match[1]):'pindown-video.mp4';const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download=name;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(link.href),30000);setStatus(status,'Download iniciado!','success')}catch(error){setStatus(status,error.message,'error');if(error.message.includes('sessão expirou'))setAuthenticated(false)}finally{$('download').disabled=false}};
 $('url').addEventListener('keydown',event=>{if(event.key==='Enter')$('analyze').click()});
-let installPrompt;window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();installPrompt=event;$('install').style.display='block'});$('install').onclick=async()=>{if(!installPrompt)return;await installPrompt.prompt();installPrompt=null;$('install').style.display='none'};
+let installPrompt;window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();installPrompt=event;$('install').style.display='inline-flex'});$('install').onclick=async()=>{if(!installPrompt)return;await installPrompt.prompt();installPrompt=null;$('install').style.display='none'};
 initialize();
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js'));
-</script></body></html>
+</script>
+</body>
+</html>

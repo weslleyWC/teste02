@@ -40,6 +40,7 @@ PLATFORMS = {
     'pinterest.com': ('Pinterest', True),
     'pin.it': ('Pinterest', False),
     'www.pin.it': ('Pinterest', False),
+    # Outros extratores continuam disponíveis sem aparecer como foco na interface.
     'instagram.com': ('Instagram', True),
     'youtube.com': ('YouTube', True),
     'youtu.be': ('YouTube', False),
@@ -95,7 +96,7 @@ def validate(url: str) -> tuple[str, str]:
     ):
         raise HTTPException(
             400,
-            'Use um link HTTPS público do Pinterest, Instagram, YouTube ou Facebook.',
+            'Cole um link HTTPS válido de um Pin público do Pinterest.',
         )
     return url, platform
 
