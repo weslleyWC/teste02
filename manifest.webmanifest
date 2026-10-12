@@ -1,0 +1,21 @@
+{
+  "id": "/",
+  "name": "PinDown — Downloader de vídeos",
+  "short_name": "PinDown",
+  "description": "Baixe vídeos públicos de redes sociais para uso pessoal.",
+  "lang": "pt-BR",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b0c12",
+  "theme_color": "#0b0c12",
+  "icons": [
+    {
+      "src": "/static/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
