@@ -27,3 +27,9 @@ O app aceita links HTTPS do Pinterest, Instagram, YouTube e Facebook. O conteúd
 ## Compartilhar links com o PinDown
 
 Depois de publicar em HTTPS e instalar a PWA em um navegador compatível, use o menu **Compartilhar** do Pinterest e escolha PinDown. O link será preenchido e a busca começará automaticamente. A disponibilidade do PinDown como destino depende do navegador, do sistema operacional e da instalação da PWA; se não aparecer no menu, cole o link no app como antes.
+
+## Download de pastas do Pinterest
+
+Cole o link de uma pasta pública (ex.: `https://br.pinterest.com/usuario/pasta/`) e o app detecta sozinho: lê a pasta, baixa os vídeos em segundo plano (com progresso) e entrega um `.zip`. Pins que não são vídeo são ignorados.
+
+Limites ajustáveis por variável de ambiente: `PINDOWN_MAX_BOARD_PINS` (padrão 40 pins) e `PINDOWN_MAX_BOARD_MB` (padrão 400 MB). Só uma pasta é processada por vez por processo; o `.zip` fica disponível por ~15 minutos. Pastas secretas não funcionam.
